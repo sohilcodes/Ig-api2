@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reel Downloader</title>
+  <style>
+    body { font-family: Arial; text-align: center; padding: 40px; }
+    input { width: 300px; padding: 10px; }
+    button { padding: 10px 20px; }
+    video, img { margin-top: 20px; width: 300px; }
+  </style>
+</head>
+<body>
+
+<h2>Instagram Reel Downloader</h2>
+
+<input id="url" placeholder="Paste Reel Link">
+<br><br>
+<button onclick="download()">Download</button>
+
+<div id="result"></div>
+
+<script>
+async function download() {
+  const url = document.getElementById("url").value;
+
+  const res = await fetch(`/api/download?url=${encodeURIComponent(url)}`);
+  const data = await res.json();
+
+  if (data.status === "success") {
+    document.getElementById("result").innerHTML = `
+      <h3>${data.title}</h3>
+      <img src="${data.thumbnail}" />
+      <video controls src="${data.video_url}"></video>
+      <br><br>
+      <a href="${data.video_url}" download>Download Video</a>
+    `;
+  } else {
+    document.getElementById("result").innerText = "Error fetching video";
+  }
+}
+</script>
+
+</body>
+</html>
